@@ -1,0 +1,60 @@
+
+name: Terraform Deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  TF_VERSION: "1.9.8"
+  TF_WORKING_DIR: "./terraform"  # Path to your Terraform files
+
+jobs:
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Initialize Terraform
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform plan \
+        -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" \
+        -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+        -var="aws_region=${{ env.AWS_REGION }}" \
+        -var="project_name=${{ env.PROJECT_NAME }}" \
+        -var="bucket_name=${{ env.BUCKET_NAME }}" \
+        -var="cluster_identifier={{{ env.CLUSTER_IDENTIFIER }}}" \
+        -var="databricks_account_id=${{ secrets.DATABRICKS_ACCOUNT_ID }}" \
+        -var="databricks_client_id=${{ secrets.DATABRICKS_CLIENT_ID }}" \
+        -var="databricks_client_secret=${{ secrets.DATABRICKS_CLIENT_SECRET }}" \
+        -var="master_password=${{ secrets.MASTER_PASSWORD }}" \
+        -var="master_username=${{ env.MASTER_USERNAME }}"
+        -out=tfplan
+
+      # - name: Apply Terraform Plan
+      #   if: github.event_name == 'push'
+      #   working-directory: ${{ env.TF_WORKING_DIR }}
+      #   run: terraform apply -auto-approve tfplan

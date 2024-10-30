@@ -11,3 +11,4 @@ wheels/
 terraform/.terraform
 .terraform*
 uv.lock
+.python-version

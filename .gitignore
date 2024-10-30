@@ -10,4 +10,4 @@ wheels/
 .venv
 terraform/.terraform
 .terraform*
-
+uv.lock

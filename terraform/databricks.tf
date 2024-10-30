@@ -10,10 +10,6 @@ data "databricks_aws_unity_catalog_policy" "this" {
   role_name      = local.uc_iam_role
 }
 
-
-
-
-
 # Create a Databricks workspace using the cross-account IAM role
 resource "databricks_mws_workspaces" "this" {
   provider       = databricks.mws
@@ -29,8 +25,6 @@ resource "databricks_mws_workspaces" "this" {
     comment = "Terraform"
   }
 }
-
-
 
 # Create a Databricks cluster with serverless compute in the workspace
 resource "databricks_cluster" "db_cluster" {

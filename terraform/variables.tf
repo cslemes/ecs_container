@@ -6,7 +6,6 @@ variable "project_name" {
   type = string
 }
 
-
 variable "capacity_providers" {
   type = list(any)
   default = [

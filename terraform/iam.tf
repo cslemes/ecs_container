@@ -28,8 +28,6 @@ resource "databricks_mws_credentials" "this" {
   depends_on       = [aws_iam_role_policy.this]
 }
 
-
-
 data "aws_caller_identity" "current" {}
 locals {
   uc_iam_role = "${local.prefix}-uc-access"

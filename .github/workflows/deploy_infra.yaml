@@ -18,18 +18,7 @@ jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: ${{ env.AWS_REGION }}
-      PROJECT_NAME: ${{ env.PROJECT_NAME }}
-      BUCKET_NAME: ${{ env.BUCKET_NAME }}
-      CLUSTER_IDENTIFIER: ${{ env.CLUSTER_IDENTIFIER }}
-      DATABRICKS_ACCOUNT_ID: ${{ secrets.DATABRICKS_ACCOUNT_ID }}
-      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
-      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
-      MASTER_PASSWORD: ${{ secrets.MASTER_PASSWORD }}
-      MASTER_USERNAME: ${{ env.MASTER_USERNAME }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

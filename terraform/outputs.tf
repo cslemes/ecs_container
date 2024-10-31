@@ -35,3 +35,11 @@ output "databricks_iam_role_arn" {
   value = aws_iam_role.cross_account_role.arn
 }
 
+output "ecr_repository_url" {
+  value = aws_ecr_repository.my_app_repo.repository_url
+}
+
+output "ecr_repository_name" {
+  value = aws_ecr_repository.my_app_repo.name
+}
+

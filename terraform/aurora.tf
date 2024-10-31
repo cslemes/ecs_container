@@ -40,4 +40,8 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
   engine_version     = aws_rds_cluster.aurora_cluster.engine_version
 }
 
-
+resource "aws_ssm_parameter" "aurora_endpoint" {
+  name  = "/dev/aurora/endpoint"
+  type  = "String"
+  value = aws_rds_cluster.aurora_cluster.endpoint
+}

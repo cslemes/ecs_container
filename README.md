@@ -1,0 +1,1 @@
+[![Terraform Deploy](https://github.com/cslemes/ecs_databricks/actions/workflows/deploy_infra.yaml/badge.svg)](https://github.com/cslemes/ecs_databricks/actions/workflows/deploy_infra.yaml)

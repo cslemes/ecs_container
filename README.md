@@ -95,7 +95,3 @@ If you'd like to contribute, please fork the repository and make changes as you'
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-This README gives an overview of the project structure, setup steps, and instructions for running the workflow.

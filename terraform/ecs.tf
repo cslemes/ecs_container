@@ -1,5 +1,5 @@
 # Create an ECS Cluster with additional options
-resource "aws_ecs_cluster" "lab-ecs" {
+resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.project_name
 
   setting {
@@ -10,7 +10,7 @@ resource "aws_ecs_cluster" "lab-ecs" {
 
 
 resource "aws_ecs_cluster_capacity_providers" "main" {
-  cluster_name = aws_ecs_cluster.lab-ecs.name
+  cluster_name = aws_ecs_cluster.ecs_cluster.name
 
   capacity_providers = var.capacity_providers
 
@@ -20,4 +20,3 @@ resource "aws_ecs_cluster_capacity_providers" "main" {
     capacity_provider = "FARGATE"
   }
 }
-

@@ -13,36 +13,20 @@ variable "capacity_providers" {
   ]
 }
 
-variable "master_username" {
-  type = string
-}
-
-variable "master_password" {
-  type = string
-}
-
-variable "bucket_name" {
+variable "secret_name" {
   type = string
 
 }
 
-variable "cluster_identifier" {
-  type = string
-}
-
-variable "databricks_account_id" {
-  type = string
-}
-
-variable "databricks_client_id" {
+variable "aws_account_id" {
   type = string
 
 }
 
-variable "databricks_client_secret" {
+variable "environment" {
   type = string
 }
 
-variable "tags" {
-  default = {}
+variable "availability_zones" {
+  type = list(string)
 }

@@ -1,8 +1,3 @@
-# resource "aws_ssm_parameter" "aurora_endpoint" {
-#   name  = "/${var.project_name}/aurora/endpoint"
-#   type  = "String"
-#   value = aws_rds_cluster.aurora_cluster.endpoint
-# }
 
 resource "aws_ssm_parameter" "vpc" {
   name  = "/${var.project_name}/vpc/vpc_id"
@@ -85,16 +80,4 @@ resource "aws_ssm_parameter" "ecs_task_role" {
   type  = "String"
   value = aws_iam_role.ecs_task_role.arn
 
-}
-
-resource "aws_ssm_parameter" "region" {
-  name  = format("/${var.project_name}/region")
-  type  = "String"
-  value = var.aws_region
-}
-
-resource "aws_ssm_parameter" "mysql_secret" {
-  name  = format("/${var.project_name}/mysql_secret")
-  type  = "String"
-  value = aws_secretsmanager_secret.mysql_secret.arn
 }

@@ -1,52 +1,97 @@
-## Template para criação de um cluster ECS na AWS
+# ECS Container Infrastructure with Terraform
 
-## Como usar
+This project provides a Terraform-based setup to deploy a containerized application on AWS ECS. It includes scripts to create and configure essential AWS resources, and a GitHub Actions workflow to automate deployment.
 
-### Configurando a AWS
+## Table of Contents
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+  - [Fork the Repository](#fork-the-repository)
+  - [Configure Secrets and Variables](#configure-secrets-and-variables)
+  - [Run GitHub Actions Workflow](#run-github-actions-workflow)
+- [File Descriptions](#file-descriptions)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Criando usuário IAM para o terraform
+## Project Structure
 
-1. No console de gerenciamento da IAM, clique em *Users* e então clique no botão *Create User*.
-![](images/Pasted%20image%2020241028135855.png)
-2. Atribua o nome ao usuário, deixe desmarcado a opção "Provide access to AWS Console", o usuário exclusivo do Terraform não precisa acessar a console, clique em Next.
-![](images/Pasted%20image%2020241028140142.png)
+The main files and directories in this repository are:
 
-3. Em Set permissions marque a opção *Attach policies directly*, marque *AdministratorAccess* e clique em *Next*, revise na proxima tela e clique em *Create user*.
-![](images/Pasted%20image%2020241029100131.png)
-O uso de `AdministratorAccess` é apenas para testes ou ambientes de desenvolvimento. Para produção, adotar uma política com permissões mínimas (least privilege) seria mais seguro.
+- **ecs.tf**: Configures the ECS cluster where containers will run.
+- **iam.tf**: Sets up IAM roles and permissions for ECS and other resources.
+- **internet_gateway.tf**: Creates an Internet Gateway for network access.
+- **nat_gateway.tf**: Sets up a NAT Gateway for private subnet access to the internet.
+- **outputs.tf**: Defines output values that Terraform will display, like resource IDs or URLs.
+- **parameters.tf**: Stores reusable parameters for modular configuration.
+- **private_subnets.tf**: Configures private subnets, isolating them from direct internet access.
+- **providers.tf**: Specifies the cloud provider configuration (AWS).
+- **public_subnets.tf**: Configures public subnets with internet access.
+- **service_discovery.tf**: Enables service discovery for ECS services.
+- **sg.tf**: Configures Security Groups to control inbound and outbound traffic.
+- **terraform.tfvars**: Holds variable values specific to this setup, like region and environment configurations.
+- **variables.tf**: Declares variables for easy configuration and reuse across resources.
+- **.github/workflows/deploy_infra.yaml**: GitHub Actions workflow file to deploy the infrastructure using Terraform.
 
-4. Clique no nome de usuário na guia do IAM Users.
-![](images/Pasted%20image%2020241029101428.png)
-5. Em *Access key 1* cliquem em Create access key.
-![](images/Pasted%20image%2020241029101524.png)
-6. Em Acces key best practices & alternatives escolha *other* e clique em Next
-7. Pode deixar a Tag em branco e clique em *Create acces key*. Salve as credencias para usarmos posteriormente, você não conseguirá pegar a secret novamente.
-### Criando um Bucket para armazenar o State do Terraform
-1. Acesse o console do S3 e clique no botão *Create bucket*
-![](images/Pasted%20image%2020241029203935.png)
-2. Coloque um nome no bucket, o nome dos bucket são unicos em todas as contas AWS, deixei as demais opções padrão, e clique em *Create bucket*.
-![](images/Pasted%20image%2020241029204214.png)
-### Instalando o Cli do Terraform
+## Prerequisites
 
-Terraform:
-```bash
-curl -fsSl  "https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip" -o terraform.zip
-unzip terraform.zip
-sudo mv terraform /usr/local/bin/
-```
+- **Terraform**: Ensure that Terraform is installed (version 1.9.8 recommended).
+- **AWS Account**: You'll need AWS credentials with permissions to create and manage ECS resources.
+- **GitHub Account**: Required to fork the repository and set up GitHub Actions.
 
-### Aqui está uma breve explicação de cada arquivo HCL:
+## Getting Started
 
-1. **ecs.tf**: Define o cluster ECS, onde os contêineres serão executados.
-2. **iam.tf**: Configura as permissões IAM necessárias para recursos e usuários.
-3. **internet_gateway.tf**: Cria um Internet Gateway para permitir acesso externo à rede.
-4. **nat_gateway.tf**: Cria um NAT Gateway para permitir que sub-redes privadas acessem a internet de forma controlada.
-5. **outputs.tf**: Define as saídas que o Terraform exibirá após a criação dos recursos (como IDs ou URLs).
-6. **parameters.tf**: Armazena parâmetros específicos, como configurações que podem ser reutilizadas em vários arquivos.
-7. **private_subnets.tf**: Cria sub-redes privadas, isoladas da internet para maior segurança.
-8. **providers.tf**: Configura os provedores necessários para o Terraform, como AWS.
-9. **public_subnets.tf**: Cria sub-redes públicas, permitindo o acesso direto à internet.
-10. **service_discovery.tf**: Configura o Service Discovery para permitir a descoberta de serviços no cluster ECS.
-11. **sg.tf**: Define os Security Groups (SGs), que controlam o tráfego de entrada e saída para os recursos.
-12. **terraform.tfvars**: Arquivo de variáveis, usado para definir valores que serão passados para o Terraform, como configurações específicas do ambiente.
-13. **variables.tf**: Declara variáveis usadas nos outros arquivos, facilitando a configuração dinâmica e reutilizável.
+### Fork the Repository
+
+1. Fork this repository to your GitHub account by clicking the "Fork" button at the top-right of this page.
+2. Clone the forked repository to your local machine:
+
+   ```bash
+   git clone https://github.com/<your-username>/ecs_container.git
+   cd ecs_container
+   ```
+
+### Configure Secrets and Variables
+
+To allow GitHub Actions to deploy your infrastructure, add the following secrets and variables in your repository settings:
+
+1. Go to **Settings** > **Secrets and variables** > **Actions**.
+2. Add the following **Secrets**:
+   - `AWS_ACCESS_KEY_ID`: Your AWS access key ID.
+   - `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+3. Add the following **Variables**:
+   - `AWS_REGION`: The AWS region where resources will be deployed (e.g., `us-east-1`).
+   - `PROJECT_NAME`: A name for the project to identify resources.
+   - `BUCKET_NAME`: S3 bucket name for Terraform state storage (if using remote state).
+
+### Run GitHub Actions Workflow
+
+To deploy the infrastructure, follow these steps:
+
+1. Go to the **Actions** tab in your GitHub repository.
+2. Select the **Terraform Deploy** workflow and click **Run workflow**.
+3. Choose one of the available deployment types:
+   - **plan**: To view a plan of the infrastructure changes.
+   - **apply**: To create or update infrastructure.
+   - **destroy**: To remove infrastructure.
+
+GitHub Actions will execute the Terraform commands based on the deployment type selected.
+
+## File Descriptions
+
+Each Terraform file serves a specific purpose:
+
+- **ecs.tf**: Configures the ECS cluster.
+- **iam.tf**: Sets up necessary IAM roles and permissions.
+- **internet_gateway.tf** & **nat_gateway.tf**: Configure gateways for internet access.
+- **private_subnets.tf** & **public_subnets.tf**: Define private and public subnets.
+- **sg.tf**: Configures security groups to manage traffic.
+- **service_discovery.tf**: Enables service discovery for container services.
+- **variables.tf** & **terraform.tfvars**: Define and store variables for modular setup.
+
+## Contributing
+
+If you'd like to contribute, please fork the repository and make changes as you'd like. Pull requests are welcome.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
